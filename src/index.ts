@@ -3,6 +3,7 @@ import 'express-async-errors'; // Enable default error handling for async errors
 import express, { Express } from 'express';
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
+import UserController from './controllers/UserController';
 
 const app: Express = express();
 const { PORT, COOKIE_SECRET } = process.env;
@@ -21,6 +22,9 @@ app.use(
 );
 
 app.use(express.json());
+
+app.post('/api/users', UserController.registerUser);
+app.post('/api/login', UserController.logIn);
 
 app.listen(PORT, () => {
   console.log(`server listening on http://localhost:${PORT}`);
