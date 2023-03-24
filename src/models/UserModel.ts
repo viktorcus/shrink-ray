@@ -4,7 +4,7 @@ import { User } from '../entities/User';
 const userRepository = AppDataSource.getRepository(User);
 
 async function getUserByUsername(username: string): Promise<User | null> {
-  return userRepository.findOne({ where: { username } });
+  return await userRepository.findOne({ where: { username } });
 }
 
 async function addNewUser(username: string, passwordHash: string): Promise<User | null> {
@@ -17,4 +17,12 @@ async function addNewUser(username: string, passwordHash: string): Promise<User 
   return newUser;
 }
 
-export { addNewUser, getUserByUsername };
+async function getUserById(userId: string): Promise<User | null> {
+  return await userRepository
+    .createQueryBuilder('user')
+    .leftJoinAndSelect('user.links', 'links')
+    .where('user.userId = :userId', { userId })
+    .getOne();
+}
+
+export { addNewUser, getUserByUsername, getUserById };

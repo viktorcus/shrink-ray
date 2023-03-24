@@ -23,7 +23,7 @@ export class Link {
   @Column()
   numHits: number;
 
-  @ManyToOne(() => User, (user) => user.link)
+  @ManyToOne(() => User, (user) => user.links)
   @JoinColumn()
   user: Relation<User>;
 }
