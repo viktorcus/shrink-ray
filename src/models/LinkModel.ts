@@ -43,4 +43,33 @@ async function updateLinkVisits(link: Link): Promise<Link> {
   return await linkRepository.save(updatedLink);
 }
 
-export { getLinkById, createNewLink, createLinkId, updateLinkVisits };
+async function getLinksByUserId(userId: string): Promise<Link[]> {
+  const links = await linkRepository
+    .createQueryBuilder('link')
+    .where({ user: { userId } })
+    .leftJoin('link.user', 'user')
+    .select(['link.linkId', 'link.originalUrl', 'user.userId', 'user.username', 'user.isAdmin'])
+    .getMany();
+
+  return links;
+}
+
+async function getLinksByUserIdForOwnAccount(userId: string): Promise<Link[]> {
+  const links = await linkRepository
+    .createQueryBuilder('link')
+    .where({ user: { userId } })
+    .leftJoin('link.user', 'user')
+    .select(['link', 'user.userId', 'user.username', 'user.isAdmin', 'user.isPro'])
+    .getMany();
+
+  return links;
+}
+
+export {
+  getLinkById,
+  createNewLink,
+  createLinkId,
+  updateLinkVisits,
+  getLinksByUserId,
+  getLinksByUserIdForOwnAccount,
+};

@@ -1,5 +1,12 @@
 import { Request, Response } from 'express';
-import { createLinkId, createNewLink, getLinkById, updateLinkVisits } from '../models/LinkModel';
+import {
+  createLinkId,
+  createNewLink,
+  getLinkById,
+  updateLinkVisits,
+  getLinksByUserId,
+  getLinksByUserIdForOwnAccount,
+} from '../models/LinkModel';
 import { getUserById } from '../models/UserModel';
 import { parseDatabaseError } from '../utils/db-utils';
 
@@ -47,4 +54,28 @@ async function getOriginalUrl(req: Request, res: Response): Promise<void> {
   res.redirect(302, link.originalUrl);
 }
 
-export default { shortenUrl, getOriginalUrl };
+async function getLinksForTargetUser(req: Request, res: Response): Promise<void> {
+  const { targetUserId } = req.params as TargetUserRequest;
+
+  const user = await getUserById(targetUserId);
+  if (!user) {
+    res.sendStatus(404);
+    return;
+  }
+
+  try {
+    if (req.session.isLoggedIn && req.session.authenticatedUser.userId === targetUserId) {
+      const links = await getLinksByUserIdForOwnAccount(targetUserId);
+      res.json(links);
+    } else {
+      const links = await getLinksByUserId(targetUserId);
+      res.json(links);
+    }
+  } catch (err) {
+    console.error(err);
+    const databaseErrorMessage = parseDatabaseError(err);
+    res.status(500).json(databaseErrorMessage);
+  }
+}
+
+export default { shortenUrl, getOriginalUrl, getLinksForTargetUser };

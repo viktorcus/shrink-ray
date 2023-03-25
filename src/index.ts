@@ -27,6 +27,7 @@ app.use(express.json());
 app.post('/api/users', UserController.registerUser);
 app.post('/api/login', UserController.logIn);
 app.post('/api/links', LinkController.shortenUrl);
+app.get('/api/users/:targetUserId/links', LinkController.getLinksForTargetUser);
 app.get('/:targetLinkId', LinkController.getOriginalUrl);
 
 app.listen(PORT, () => {

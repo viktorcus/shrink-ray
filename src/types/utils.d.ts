@@ -16,3 +16,7 @@ type NewLinkRequest = {
 type LinkRedirectRequest = {
   targetLinkId: string;
 };
+
+type TargetUserRequest = {
+  targetUserId: string;
+};
