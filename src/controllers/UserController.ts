@@ -17,7 +17,7 @@ async function registerUser(req: Request, res: Response): Promise<void> {
   try {
     const newUser = await addNewUser(username, passwordHash);
     console.log(newUser);
-    res.sendStatus(201);
+    res.status(201).json(newUser);
   } catch (err) {
     console.error(err);
     const databaseErrorMessage = parseDatabaseError(err);

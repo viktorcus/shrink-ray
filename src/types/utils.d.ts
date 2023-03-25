@@ -8,3 +8,11 @@ type NewUserRequest = {
   username: string;
   password: string;
 };
+
+type NewLinkRequest = {
+  originalUrl: string;
+};
+
+type LinkRedirectRequest = {
+  targetLinkId: string;
+};

@@ -4,6 +4,7 @@ import express, { Express } from 'express';
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
 import UserController from './controllers/UserController';
+import LinkController from './controllers/LinkController';
 
 const app: Express = express();
 const { PORT, COOKIE_SECRET } = process.env;
@@ -25,6 +26,8 @@ app.use(express.json());
 
 app.post('/api/users', UserController.registerUser);
 app.post('/api/login', UserController.logIn);
+app.post('/api/links', LinkController.shortenUrl);
+app.get('/:targetLinkId', LinkController.getOriginalUrl);
 
 app.listen(PORT, () => {
   console.log(`server listening on http://localhost:${PORT}`);
