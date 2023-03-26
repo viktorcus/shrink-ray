@@ -20,3 +20,8 @@ type LinkRedirectRequest = {
 type TargetUserRequest = {
   targetUserId: string;
 };
+
+type LinkAndUserRequest = {
+  targetLinkId: string;
+  targetUserId: string;
+};

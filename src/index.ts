@@ -29,6 +29,7 @@ app.post('/api/login', UserController.logIn);
 app.post('/api/links', LinkController.shortenUrl);
 app.get('/api/users/:targetUserId/links', LinkController.getLinksForTargetUser);
 app.get('/:targetLinkId', LinkController.getOriginalUrl);
+app.delete('/api/users/:targetUserId/links/:targetLinkId', LinkController.deleteLink);
 
 app.listen(PORT, () => {
   console.log(`server listening on http://localhost:${PORT}`);

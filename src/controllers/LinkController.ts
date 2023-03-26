@@ -6,6 +6,7 @@ import {
   updateLinkVisits,
   getLinksByUserId,
   getLinksByUserIdForOwnAccount,
+  deleteLinkByLinkId,
 } from '../models/LinkModel';
 import { getUserById } from '../models/UserModel';
 import { parseDatabaseError } from '../utils/db-utils';
@@ -42,9 +43,8 @@ async function shortenUrl(req: Request, res: Response): Promise<void> {
 
 async function getOriginalUrl(req: Request, res: Response): Promise<void> {
   const { targetLinkId } = req.params as LinkRedirectRequest;
-  const link = await getLinkById(targetLinkId);
-  console.log(link);
 
+  const link = await getLinkById(targetLinkId);
   if (!link) {
     res.sendStatus(404);
     return;
@@ -78,4 +78,33 @@ async function getLinksForTargetUser(req: Request, res: Response): Promise<void>
   }
 }
 
-export default { shortenUrl, getOriginalUrl, getLinksForTargetUser };
+async function deleteLink(req: Request, res: Response): Promise<void> {
+  const { targetUserId, targetLinkId } = req.params as LinkAndUserRequest;
+  if (!req.session.isLoggedIn) {
+    res.sendStatus(401);
+    return;
+  }
+
+  const { userId, isAdmin } = req.session.authenticatedUser;
+  if (!(userId === targetUserId || isAdmin)) {
+    res.sendStatus(403);
+    return;
+  }
+
+  const link = await getLinkById(targetLinkId);
+  if (!link) {
+    res.sendStatus(404);
+    return;
+  }
+
+  try {
+    deleteLinkByLinkId(targetLinkId);
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    const databaseErrorMessage = parseDatabaseError(err);
+    res.status(500).json(databaseErrorMessage);
+  }
+}
+
+export default { shortenUrl, getOriginalUrl, getLinksForTargetUser, deleteLink };
