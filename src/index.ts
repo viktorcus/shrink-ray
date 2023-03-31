@@ -1,3 +1,11 @@
+/*
+ *  index.ts
+ *  Project: Shrink-Ray
+ *
+ *  Author: Carolyn Seglem
+ *  Created on: Mar 31, 2023
+ */
+
 import './config'; // Load environment variables
 import 'express-async-errors'; // Enable default error handling for async errors
 import express, { Express } from 'express';
@@ -28,8 +36,8 @@ app.post('/api/users', UserController.registerUser);
 app.post('/api/login', UserController.logIn);
 app.post('/api/links', LinkController.shortenUrl);
 app.get('/api/users/:targetUserId/links', LinkController.getLinksForTargetUser);
-app.get('/:targetLinkId', LinkController.getOriginalUrl);
 app.delete('/api/users/:targetUserId/links/:targetLinkId', LinkController.deleteLink);
+app.get('/:targetLinkId', LinkController.getOriginalUrl);
 
 app.listen(PORT, () => {
   console.log(`server listening on http://localhost:${PORT}`);

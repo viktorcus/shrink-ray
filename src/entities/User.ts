@@ -1,3 +1,11 @@
+/*
+ *  User.ts
+ *  Project: Shrink-Ray
+ *
+ *  Author: Carolyn Seglem
+ *  Created on: Mar 31, 2023
+ */
+
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Relation } from 'typeorm';
 import { Link } from './Link';
 
