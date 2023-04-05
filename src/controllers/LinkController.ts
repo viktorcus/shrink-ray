@@ -27,7 +27,7 @@ async function shortenUrl(req: Request, res: Response): Promise<void> {
 
   // check session login validity
   if (!req.session.isLoggedIn) {
-    res.sendStatus(401);
+    res.redirect('/login');
     return;
   }
 
