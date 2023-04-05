@@ -16,6 +16,7 @@ import LinkController from './controllers/LinkController';
 
 const app: Express = express();
 const { PORT, COOKIE_SECRET } = process.env;
+app.use(express.static('public', { extensions: ['html'] }));
 
 const SQLiteStore = connectSqlite3(session);
 
@@ -30,6 +31,7 @@ app.use(
   }),
 );
 
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.post('/api/users', UserController.registerUser);
